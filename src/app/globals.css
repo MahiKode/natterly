@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Components use these via Tailwind's theme (e.g. bg-surface, text-muted)
+ * so light/dark mode is handled here, not in every component.
+ */
+@theme {
+  --color-bg: #f7f6f3;
+  --color-surface: #ffffff;
+  --color-surface-2: #f0eee9;
+  --color-ink: #1b1b1f;
+  --color-muted: #6b6b76;
+  --color-line: #e4e1da;
+  --color-brand: #5b4bdb;
+  --color-brand-ink: #ffffff;
+  --color-brand-soft: #ece9ff;
+  --color-good: #15803d;
+  --color-warn: #b45309;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #111114;
+    --color-surface: #1a1a1f;
+    --color-surface-2: #23232a;
+    --color-ink: #f2f2f5;
+    --color-muted: #9b9ba8;
+    --color-line: #2e2e36;
+    --color-brand: #8b7dff;
+    --color-brand-ink: #111114;
+    --color-brand-soft: #2a2550;
+    --color-good: #4ade80;
+    --color-warn: #fbbf24;
+  }
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Gentle pulsing ring on the mic while listening. */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-brand) 45%, transparent); }
+  100% { box-shadow: 0 0 0 18px transparent; }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 1.2s ease-out infinite;
+}
+
+/* Three-dot "typing" indicator. */
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.2; }
+  40% { opacity: 1; }
+}
+.typing-dot {
+  animation: blink 1.2s infinite both;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
