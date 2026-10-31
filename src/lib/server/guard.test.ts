@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkRateLimit } from "./guard";
+import { checkRateLimit, clientIp } from "./guard";
 
 describe("checkRateLimit", () => {
   it("allows up to the limit then blocks until the window resets", () => {
@@ -14,5 +14,18 @@ describe("checkRateLimit", () => {
   it("tracks clients separately", () => {
     expect(checkRateLimit("ip-b", 1, 0).ok).toBe(true);
     expect(checkRateLimit("ip-c", 1, 0).ok).toBe(true);
+  });
+});
+
+describe("clientIp", () => {
+  const req = (headers: Record<string, string>) => new Request("http://x", { headers });
+
+  it("uses the right-most x-forwarded-for hop (the one our proxy added)", () => {
+    expect(clientIp(req({ "x-forwarded-for": "1.1.1.1, 2.2.2.2" }))).toBe("2.2.2.2");
+  });
+
+  it("falls back to x-real-ip, then 'local'", () => {
+    expect(clientIp(req({ "x-real-ip": "3.3.3.3" }))).toBe("3.3.3.3");
+    expect(clientIp(req({}))).toBe("local");
   });
 });

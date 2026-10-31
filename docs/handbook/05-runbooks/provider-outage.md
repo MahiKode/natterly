@@ -9,4 +9,4 @@
 - If one feed for a topic fails, the others are still used (`Promise.allSettled`).
 - If all feeds fail, users see "No news sources could be reached right now."
 - Check a feed: `curl -sI <url>`. If a URL changed permanently, update `src/lib/news/topics.ts`.
-- Wikipedia failures show "Couldn't find anything…". Check https://www.wikimediastatus.net.
+- If Wikipedia has no match, users see "Couldn't find anything about …". If Wikipedia is down or times out, users see "Couldn't gather that topic right now" and the real error is in the server logs (`briefing gather failed`). Check https://www.wikimediastatus.net.

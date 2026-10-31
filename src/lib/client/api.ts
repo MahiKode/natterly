@@ -61,34 +61,51 @@ export async function streamChat(
   const reader = res.body!.pipeThrough(new TextDecoderStream()).getReader();
   let buffer = "";
   let full = "";
+  let finished = false;
   for (;;) {
     const { value, done } = await reader.read();
     if (done) break;
     buffer += value;
     const lines = buffer.split("\n");
-    buffer = lines.pop() ?? "";
+    buffer = lines.pop() ?? ""; // the last piece may be an incomplete line
     for (const line of lines) {
       if (!line.trim()) continue;
-      const event = JSON.parse(line) as StreamEvent;
+      const event = parseEvent(line);
       if (event.type === "text") {
         full += event.text;
         onText(event.text);
       } else if (event.type === "error") {
         throw new ApiError(event.message, 502);
+      } else {
+        finished = true;
       }
     }
   }
+  // No "done" event means the connection was cut: don't save a half reply as if it were complete.
+  if (!finished) throw new ApiError("The reply was cut off. Please try again.", 502);
   return full;
+}
+
+function parseEvent(line: string): StreamEvent {
+  try {
+    return JSON.parse(line) as StreamEvent;
+  } catch {
+    throw new ApiError("Received a garbled reply. Please try again.", 502);
+  }
 }
 
 export async function fetchBriefing(input: { topicId?: string; query?: string }): Promise<Briefing> {
   return (await post("/api/briefing", input)).json();
 }
 
+/** Feedback looks at the most recent turns only (keeps the request inside the API's limits). */
+export const MAX_TURNS_FOR_FEEDBACK = 40;
+
 export async function fetchFeedback(input: {
   personaId: string;
   scenarioTitle: string;
   messages: ChatMessage[];
 }): Promise<CoachFeedback> {
-  return (await post("/api/feedback", input)).json();
+  const body = { ...input, messages: input.messages.slice(-MAX_TURNS_FOR_FEEDBACK) };
+  return (await post("/api/feedback", body)).json();
 }

@@ -3,6 +3,9 @@ import { getNewsTopic } from "./topics";
 import { searchWikipedia } from "./wikipedia";
 import type { Briefing, SourceItem } from "./types";
 
+/** An error whose message is safe and friendly to show to learners. */
+export class BriefingError extends Error {}
+
 /**
  * Gather source material for The Briefing.
  * - Preset news topic (e.g. "uk") → headlines from free RSS feeds.
@@ -16,14 +19,14 @@ export async function gatherBriefing(input: { topicId?: string; query?: string }
     const perFeed = Math.ceil(10 / preset.feeds.length);
     const results = await Promise.allSettled(preset.feeds.map((f) => fetchFeed(f.url, f.source, perFeed)));
     const items = interleave(results.flatMap((r) => (r.status === "fulfilled" ? [r.value] : [])));
-    if (items.length === 0) throw new Error("No news sources could be reached right now.");
+    if (items.length === 0) throw new BriefingError("No news sources could be reached right now. Please try again shortly.");
     return { topic: preset.label, kind: "news", items: dedupe(items).slice(0, 10) };
   }
 
   const query = (input.query ?? "").trim();
-  if (!query) throw new Error("Please choose or type a topic.");
+  if (!query) throw new BriefingError("Please choose or type a topic.");
   const items = await searchWikipedia(query);
-  if (items.length === 0) throw new Error(`Couldn't find anything about "${query}". Try wording it differently.`);
+  if (items.length === 0) throw new BriefingError(`Couldn't find anything about "${query}". Try wording it differently.`);
   return { topic: query, kind: "explainer", items };
 }
 

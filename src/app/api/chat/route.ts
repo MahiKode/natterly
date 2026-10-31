@@ -6,7 +6,7 @@ import { ChatRequestSchema, type ChatMessage, type StreamEvent } from "@/lib/api
 import { briefingToContext } from "@/lib/news/gather";
 import { getPersona } from "@/lib/personas/personas";
 import { getScenario } from "@/lib/personas/scenarios";
-import { guardRequest, jsonError } from "@/lib/server/guard";
+import { guardRequest, jsonError, readJsonBody } from "@/lib/server/guard";
 
 /**
  * POST /api/chat — one conversational turn with a Local, streamed back as NDJSON.
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   const guard = guardRequest(req);
   if (!guard.ok) return jsonError(guard.status, guard.message);
 
-  const parsed = ChatRequestSchema.safeParse(await req.json().catch(() => null));
+  const parsed = ChatRequestSchema.safeParse(await readJsonBody(req));
   if (!parsed.success) return jsonError(400, "Invalid request.");
   const body = parsed.data;
 

@@ -16,4 +16,5 @@ The Briefing must talk about *current* news and any topic, without making facts 
 - ✅ Free and fast; answers cite real sources the learner can open.
 - ⚠️ Only headlines and summaries are used (not full articles), so depth is limited; that suits a 1-minute briefing.
 - ⚠️ Feed URLs can change. Each topic has several feeds and partial failure is tolerated. See runbook "provider outage".
+- ⚠️ **Known limitation:** the browser holds the gathered sources and sends them back with each question, so a crafted request could supply made-up "sources" and use the endpoint as a general chatbot (bounded by schema limits, rate limit and access code). **Phase 2:** cache briefings on the server and send only a briefing id.
 - ⚠️ Respect publishers' terms: we show headlines with links and don't republish full text. Review before commercial launch.

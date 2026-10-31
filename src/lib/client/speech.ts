@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Persona } from "@/lib/personas/types";
+import { splitSentences } from "./sentences";
 
 /**
  * Free, on-device speech using the browser's Web Speech API (ADR-0004).
@@ -171,13 +172,10 @@ export class SentenceSpeaker {
   ) {}
 
   push(chunk: string) {
-    this.buffer += chunk;
-    // Speak every complete sentence; keep the unfinished tail in the buffer.
-    const match = this.buffer.match(/^[\s\S]*[.!?…]["'”’)]?\s/);
-    if (match) {
-      this.say(match[0]);
-      this.buffer = this.buffer.slice(match[0].length);
-    }
+    // Speak each complete sentence as its own utterance; keep the unfinished tail.
+    const { sentences, rest } = splitSentences(this.buffer + chunk);
+    sentences.forEach((s) => this.say(s));
+    this.buffer = rest;
   }
 
   flush() {

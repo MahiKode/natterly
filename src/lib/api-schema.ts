@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 /**
+ * Limits here are deliberately generous; the client sends at most the last 24 chat turns
+ * (useConversation.ts) and 40 turns for feedback (client/api.ts), so normal use never hits them.
+ *
  * Request/response contracts shared by the API routes (server) and the UI (client).
  * Keeping them in one file means a contract change is a compile error on both sides.
  */
@@ -22,19 +25,19 @@ const SourceItemSchema = z.object({
 export const BriefingSchema = z.object({
   topic: z.string().min(1).max(200),
   kind: z.enum(["news", "explainer"]),
-  items: z.array(SourceItemSchema).min(1).max(12),
+  items: z.array(SourceItemSchema).min(1).max(10),
 });
 
 export const ChatRequestSchema = z.discriminatedUnion("mode", [
   z.object({
     mode: z.literal("chat"),
-    personaId: z.string(),
-    scenarioId: z.string(),
+    personaId: z.string().max(50),
+    scenarioId: z.string().max(50),
     messages: z.array(ChatMessageSchema).max(60),
   }),
   z.object({
     mode: z.literal("briefing"),
-    personaId: z.string(),
+    personaId: z.string().max(50),
     briefing: BriefingSchema,
     messages: z.array(ChatMessageSchema).max(60),
   }),
@@ -47,7 +50,7 @@ export const BriefingRequestSchema = z.object({
 });
 
 export const FeedbackRequestSchema = z.object({
-  personaId: z.string(),
+  personaId: z.string().max(50),
   scenarioTitle: z.string().max(100),
   messages: z.array(ChatMessageSchema).min(1).max(60),
 });

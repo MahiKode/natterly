@@ -4,7 +4,10 @@ import { getAnthropic, MissingKeyError, MODELS } from "@/lib/ai/client";
 import { FEEDBACK_SYSTEM_PROMPT } from "@/lib/ai/prompts";
 import { CoachFeedbackSchema, FeedbackRequestSchema } from "@/lib/api-schema";
 import { getPersona } from "@/lib/personas/personas";
-import { guardRequest, jsonError } from "@/lib/server/guard";
+import { guardRequest, jsonError, readJsonBody } from "@/lib/server/guard";
+
+const MAX_LINE_CHARS = 1500;
+const MAX_TRANSCRIPT_CHARS = 16000;
 
 /**
  * POST /api/feedback — one AI call per session that turns the learner's lines into
@@ -14,14 +17,17 @@ export async function POST(req: Request) {
   const guard = guardRequest(req);
   if (!guard.ok) return jsonError(guard.status, guard.message);
 
-  const parsed = FeedbackRequestSchema.safeParse(await req.json().catch(() => null));
+  const parsed = FeedbackRequestSchema.safeParse(await readJsonBody(req));
   if (!parsed.success) return jsonError(400, "Invalid request.");
   const { personaId, scenarioTitle, messages } = parsed.data;
   const persona = getPersona(personaId);
 
+  // Cap what we send so one feedback call can never be expensive: each line is shortened
+  // and only the most recent part of the transcript is kept.
   const transcript = messages
-    .map((m) => `${m.role === "user" ? "LEARNER" : (persona?.name ?? "PARTNER").toUpperCase()}: ${m.content}`)
-    .join("\n");
+    .map((m) => `${m.role === "user" ? "LEARNER" : (persona?.name ?? "PARTNER").toUpperCase()}: ${m.content.slice(0, MAX_LINE_CHARS)}`)
+    .join("\n")
+    .slice(-MAX_TRANSCRIPT_CHARS);
 
   try {
     const response = await getAnthropic().messages.parse({

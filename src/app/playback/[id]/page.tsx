@@ -27,7 +27,10 @@ export default function PlaybackReport() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSession(s);
     if (!s) return;
-    if (s.feedback) return setFeedback(s.feedback);
+    if (s.feedback) {
+      setFeedback(s.feedback); // already reviewed: no AI call needed
+      return;
+    }
 
     let cancelled = false;
     fetchFeedback({
