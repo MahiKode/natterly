@@ -45,7 +45,7 @@ natterly/
 | Change the chat screen (layout) | `src/components/Conversation.tsx` |
 | Change chat behaviour (history, saving, voice) | `src/components/useConversation.ts` |
 | Change voice selection / speech | `src/lib/client/speech.ts` |
-| Change Playback metrics | `src/lib/feedback/metrics.ts` (+ its tests) |
+| Change Playback metrics / filler words | `src/lib/feedback/metrics.ts` (+ its tests) ([how-to](04-how-to/change-playback-metrics.md)) |
 | Change colours / theme | `src/app/globals.css` |
 
 ## Conventions

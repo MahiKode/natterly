@@ -165,6 +165,8 @@ export function Conversation({ kind, persona, title, buildRequest, localOpens, h
             </button>
           )}
           <input
+            type="text"
+            aria-label="Your reply"
             value={draft}
             maxLength={MAX_TYPED_CHARS}
             onChange={(e) => setDraft(e.target.value)}

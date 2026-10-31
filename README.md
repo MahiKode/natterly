@@ -22,7 +22,12 @@ cp .env.example .env.local      # then add your ANTHROPIC_API_KEY
 npm run dev                      # http://localhost:3000
 ```
 
-Use **Chrome, Edge or Safari** for voice input (Firefox can type only).
+Use **Chrome, Edge or Safari** for voice input (Firefox can type only). Stop the server with **Ctrl+C**.
+
+### Trying the app without an API key
+The UI loads, but chats show "ANTHROPIC_API_KEY is not set". To work on the UI without a key, mock `/api/chat` (example in [docs/onboarding-drill.md](docs/onboarding-drill.md)). The Briefing also needs outbound internet access to news feeds and Wikipedia.
+
+`npm install` may report a few moderate advisories in dev-only lint tooling (eslint plugins). They don't ship to users; `npm audit --omit=dev` shows the production picture.
 
 ## Scripts
 
@@ -30,7 +35,7 @@ Use **Chrome, Edge or Safari** for voice input (Firefox can type only).
 |---|---|
 | `npm run dev` | Local development server |
 | `npm run build` / `npm start` | Production build / serve |
-| `npm run check` | Typecheck + lint + unit tests (what CI runs) |
+| `npm run check` | Typecheck + lint + unit tests (CI runs this, then `npm run build`) |
 | `npm test` | Unit tests only (Vitest) |
 
 ## Documentation

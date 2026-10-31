@@ -2,6 +2,11 @@
 
 All notable changes to this project. Format: [Keep a Changelog](https://keepachangelog.com); versions follow [SemVer](https://semver.org).
 
+## [Unreleased]
+
+### Docs
+- Onboarding drill fixes: add-a-local required fields, playback-metrics how-to, rollback and rotate-keys runbooks, README "no API key" section.
+
 ## [0.1.0] – 2026-10-31 · Phase 1 (private beta)
 
 ### Fixed (from code review, before release)

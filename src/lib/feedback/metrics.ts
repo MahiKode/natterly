@@ -30,6 +30,8 @@ export interface SpeakingMetrics {
 
 const TWO_WORD_FILLERS = new Set(["you know", "i mean", "sort of", "kind of"]);
 const ONE_WORD_FILLERS = new Set(["basically", "literally", "actually", "um", "umm", "uh", "uhh", "er", "erm", "hmm", "like"]);
+/** Words that, right before "like", mean it's the verb ("I like tea"), not a filler. */
+const LIKE_AS_VERB_BEFORE = new Set(["i", "you", "we", "they", "would", "don't", "didn't", "really", "to", "i'd", "you'd", "we'd"]);
 
 export function countWords(text: string): number {
   return tokenize(text).length;
@@ -66,7 +68,6 @@ export function countFillers(text: string): Map<string, number> {
   return counts;
 }
 
-const LIKE_AS_VERB_BEFORE = new Set(["i", "you", "we", "they", "would", "don't", "didn't", "really", "to", "i'd", "you'd", "we'd"]);
 
 export function computeMetrics(turns: SpokenTurn[]): SpeakingMetrics {
   const allWords = turns.flatMap((t) => tokenize(t.text));

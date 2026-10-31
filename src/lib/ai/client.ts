@@ -24,6 +24,6 @@ export function getAnthropic(): Anthropic {
 
 export class MissingKeyError extends Error {
   constructor() {
-    super("ANTHROPIC_API_KEY is not set. Copy .env.example to .env.local and add your key.");
+    super("ANTHROPIC_API_KEY is not set. Add your key to .env.local (copy .env.example if you haven't), then restart the server.");
   }
 }

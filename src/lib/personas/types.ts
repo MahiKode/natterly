@@ -27,9 +27,9 @@ export interface Persona {
   voice: {
     /** BCP-47 language tag used to pick a system voice. */
     lang: string;
-    /** 0.1–10, 1 is normal. */
+    /** Speaking speed, 1 is normal. Keep within 0.85–1.2 (enforced by tests) so learners can follow. */
     rate: number;
-    /** 0–2, 1 is normal. */
+    /** Voice pitch, 1 is normal. Keep within 0.85–1.2 (enforced by tests) so it sounds natural. */
     pitch: number;
     /** Preferred voice gender, used as a soft hint when choosing among system voices. */
     gender: "female" | "male";

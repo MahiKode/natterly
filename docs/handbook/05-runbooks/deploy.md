@@ -13,7 +13,7 @@
 ## Every release
 1. Merge to `main` after CI is green and review is approved. Vercel deploys automatically.
 2. Smoke test on the production URL (phone and desktop): open Cuppa, have 2 turns by voice, Finish & review, open a Briefing.
-3. Add the version to `CHANGELOG.md` and tag: `git tag v0.x.y && git push --tags`.
+3. In `CHANGELOG.md`, rename `[Unreleased]` to the new version and date, add a fresh empty `[Unreleased]`, then tag: `git tag v0.x.y && git push --tags`.
 
 ## Other hosts
 Any Node 20+ host works: `npm ci && npm run build && npm start` (port 3000). It must be served over HTTPS for microphone access.

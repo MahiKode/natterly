@@ -26,4 +26,4 @@ await page.route("**/api/chat", (route) =>
 ## Record
 | Date | Who | Phase | Stuck points → docs fixed |
 |---|---|---|---|
-| | | 1 | |
+| 2026-10-31 | Fresh AI agent (no context) | 1 | All 7 tasks passed. 11 stuck points fixed: add-a-local required fields and test ranges, new change-playback-metrics how-to, `[Unreleased]` changelog section, rollback/rotate-keys runbooks (other hosts, redeploy, access code), README no-key and audit notes, input aria-label. |

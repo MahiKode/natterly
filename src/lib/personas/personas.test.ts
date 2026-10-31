@@ -13,8 +13,10 @@ describe("persona catalogue", () => {
   it("gives every persona a phrasebook and sane voice settings", () => {
     for (const p of PERSONAS) {
       expect(p.phrasebook.length).toBeGreaterThan(0);
-      expect(p.voice.rate).toBeGreaterThan(0.5);
-      expect(p.voice.rate).toBeLessThan(1.5);
+      for (const value of [p.voice.rate, p.voice.pitch]) {
+        expect(value).toBeGreaterThanOrEqual(0.85);
+        expect(value).toBeLessThanOrEqual(1.2);
+      }
     }
   });
 

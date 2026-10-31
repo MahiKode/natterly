@@ -17,6 +17,6 @@
 ## Definition of done
 - [ ] `npm run check` passes (CI enforces it).
 - [ ] New logic has unit tests where practical (pure functions in `src/lib/**`).
-- [ ] Docs updated: handbook / how-to / runbook / glossary as relevant, plus `CHANGELOG.md`.
+- [ ] Docs updated: handbook / how-to / runbook / glossary as relevant, plus an entry under `## [Unreleased]` in `CHANGELOG.md` (moved under a version number at release).
 - [ ] Significant decisions recorded as an ADR in `docs/adr/`.
 - [ ] Reviewer approved.
